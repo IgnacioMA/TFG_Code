@@ -1,0 +1,277 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Perfil</title>
+        
+    </h:head>
+    <h:body style="padding-left: 50px; padding-right: 20px; padding-bottom: 20px">
+        
+        <h:panelGrid rendered="#{loginBean.gestion == false}">
+
+        <h:form>
+        <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+            </b:navBar>
+            <br/>
+            <br/>
+            <br/>
+            
+            <div>
+            <nav style="font-weight:normal">
+                <b:navbarLinks>
+                    <b:navCommandLink value="Principal" action="#{loginBean.volver()}"></b:navCommandLink>
+                    <b:navCommandLink value="Mis Articulos" action="#{articuloBean.irPublicados()}"></b:navCommandLink>
+                    <b:navCommandLink value="Publicaciones" action="#{articuloBean.irPublicaciones()}"></b:navCommandLink>
+                    <b:navCommandLink value="Revisiones" action="#{articuloBean.irRevisiones()}" rendered="#{loginBean.usuarioP.idRango.idRango == 3}"></b:navCommandLink>
+                    <b:navCommandLink value="Gestión" action="#{loginBean.accesoGestionUsu()}" rendered="#{loginBean.usuarioP.idRango.idRango == 4}"></b:navCommandLink>
+                    <b:navCommandLink value="Correo" action="#{correoBean.irRecibidos()}"></b:navCommandLink>
+                </b:navbarLinks>
+            </nav>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            
+            <legend style="font-weight:bold">Mi Perfil</legend>
+            
+            <div>
+                <label>Alias:</label>
+                <div>
+                    <h:outputText value="#{loginBean.usuarioP.alias}"></h:outputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>Email:</label>
+                <div>
+                    <h:outputText value="#{loginBean.usuarioP.email}"></h:outputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>ID Usuario:</label>
+                <div>
+                    <h:outputText value="#{loginBean.usuarioP.idUsuario}"></h:outputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>Rango Usuario:</label>
+                <div>
+                    <h:outputText value="#{loginBean.usuarioP.idRango.nombre}"></h:outputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>Sancion:</label>
+                <div>
+                    <h:outputText value="#{loginBean.usuarioP.sancionId.tipo}"></h:outputText>
+                </div>
+            </div> 
+            
+            <br/>
+            
+            <div>
+                <label>Nueva Contraseña</label>
+                <div>
+                    <h:inputText value="#{loginBean.pass}"></h:inputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>Contraseña Actual</label>
+                <div>
+                    <h:inputSecret value="#{loginBean.acpass}"></h:inputSecret>
+                </div>
+            </div>
+            
+            <br/>
+            
+            <div>
+                <h:outputLabel value="Seleccione Campo de Estudio y Área de Conocimiento"></h:outputLabel>
+            <table>
+                <tr>
+                    <td><h:outputLabel value="Campo de Estudio: "></h:outputLabel></td> 
+                    <td>
+                        
+                        
+                        <h:selectOneMenu value="#{loginBean.campoSel}" class="form-control">
+                            <f:selectItem itemLabel="" itemValue="0"/>
+                            <f:selectItems value="#{loginBean.campoList}" var="campo"
+                                           itemLabel="#{campo.nombre}" itemValue="#{campo.id}">
+                            </f:selectItems>                   
+                        </h:selectOneMenu>
+                        
+                        
+                    </td>
+                    <td>
+                        <h:commandButton action="#{loginBean.seleccionaCampo()}" value="Seleccionar" type="submit" class="btn btn-secondary"></h:commandButton>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><h:outputLabel value="Área de Conocimiento: " rendered="#{loginBean.campoSel!=0}"></h:outputLabel></td> 
+                    <td>
+                        <h:selectOneMenu value="#{loginBean.areaSel}" class="form-control" rendered="#{loginBean.campoSel!=0}">
+                            <f:selectItems value="#{loginBean.areaList}" var="area"
+                                           itemLabel="#{area.nombre}" itemValue="#{area.id}">
+                            </f:selectItems>
+                        </h:selectOneMenu>
+                    </td>
+                </tr>    
+            </table> 
+            </div>
+            
+            <br/>
+            
+            <b:alert rendered="#{loginBean.ac == true}">
+                    <h:outputText value="*Contraseña no valida" rendered="#{loginBean.ac == true}"/>
+            </b:alert>
+
+
+            <div>
+                <h:commandButton value="Volver" action="#{loginBean.volver()}" type="submit" class="btn btn-secondary"></h:commandButton>
+                <h:commandButton value="Actualizar Perfil" action="#{loginBean.actualizar()}" type="submit" class="btn btn-primary"></h:commandButton>
+            </div>
+            
+            <br/>
+            <br/>
+            
+        </h:form>
+        
+        </h:panelGrid>
+
+        <h:panelGrid rendered="#{loginBean.gestion == true}">
+        
+        <h:form>
+        <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+            </b:navBar>
+            <br/>
+            <br/>
+            <br/>
+            
+            <div>
+            <nav style="font-weight:normal">
+                <b:navbarLinks>
+                    <b:navCommandLink value="Principal" action="#{loginBean.volver()}"></b:navCommandLink>
+                    <b:navCommandLink value="Mis Articulos" action="#{articuloBean.irPublicados()}"></b:navCommandLink>
+                    <b:navCommandLink value="Publicaciones" action="#{articuloBean.irPublicaciones()}"></b:navCommandLink>
+                    <b:navCommandLink value="Revisiones" action="#{articuloBean.irRevisiones()}"></b:navCommandLink>
+                    <b:navCommandLink value="Gestión" action="#{loginBean.accesoGestionUsu()}"></b:navCommandLink>
+                    <b:navCommandLink value="Correo" action="#{correoBean.irRecibidos()}"></b:navCommandLink>
+                </b:navbarLinks>
+            </nav>
+            </div>
+            
+            <legend style="font-weight:bold">Editar Perfil</legend>
+     
+            <div>
+                <label>Alias:</label>
+                <div>
+                    <h:inputText value="#{loginBean.alias}"></h:inputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>Email:</label>
+                <div>
+                    <h:inputText value="#{loginBean.email}"></h:inputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>Nueva Contraseña:</label>
+                <div>
+                    <h:inputText value="#{loginBean.pass}"></h:inputText>
+                </div>
+            </div>
+                        
+            <br/>
+            
+            <div>
+                <label>ID Usuario:</label>
+                <div>
+                    <h:outputText value="#{loginBean.gestionUsu.idUsuario}"></h:outputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>Rango Usuario:</label>
+                <div>
+                    <h:outputText value="#{loginBean.gestionUsu.idRango.nombre}"></h:outputText>
+                </div>
+            </div>          
+            
+            <div>
+                <label>Sancion Usuario:</label>
+                <div>
+                    <h:outputText value="#{loginBean.gestionUsu.sancionId.tipo}"></h:outputText>
+                </div>
+            </div>
+            
+            <br/>
+            
+            <div>
+                <h:outputLabel value="Seleccione Rango y/o Sanción que se asignará"></h:outputLabel>
+            <table>
+                <tr>
+                    <td><h:outputLabel value="Rango"></h:outputLabel></td> 
+                    <td>
+                        <h:selectOneMenu value="#{loginBean.rangoSel}">
+                            <f:selectItems value="#{loginBean.rangoList}" var="rango"
+                                           itemLabel="#{rango.nombre}" itemValue="#{rango.idRango}">
+                            </f:selectItems>                   
+                        </h:selectOneMenu>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><h:outputLabel value="Sanción"></h:outputLabel></td> 
+                    <td>
+                        <h:selectOneMenu value="#{loginBean.sancionSel}">
+                            <f:selectItems value="#{loginBean.sancionList}" var="sancion"
+                                           itemLabel="#{sancion.tipo}" itemValue="#{sancion.id}">
+                            </f:selectItems>
+                        </h:selectOneMenu>
+                    </td>
+                </tr>  
+            </table> 
+            </div>
+            
+            <b:alert rendered="#{loginBean.al == true}">
+                    <h:outputText value="*Alias en Uso" rendered="#{loginBean.al == true}"/>
+            </b:alert>
+            <b:alert rendered="#{loginBean.ml == true}">
+                    <h:outputText value="*Email en Uso" rendered="#{loginBean.ml == true}"/>
+            </b:alert>
+            
+            <br/>
+            
+            <div>
+                <h:commandButton value="Volver" action="#{loginBean.volverGestion()}" type="submit" class="btn btn-secondary"></h:commandButton>
+                <h:commandButton value="Guardar cambios" action="#{loginBean.actualizarGestion()}" type="submit" class="btn btn-primary"></h:commandButton>
+            </div>
+            
+            <br/>
+            <br/>
+            
+        </h:form>
+        
+        </h:panelGrid>
+
+    </h:body>
+</html>
+

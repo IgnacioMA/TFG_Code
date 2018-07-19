@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Correo</title>
+    </h:head>
+    <h:body style="padding-left: 50px; padding-right: 20px; padding-bottom: 20px">
+        
+        <h:panelGrid rendered="#{correoBean.envio == false}">
+    
+        <h:form>
+            <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+            </b:navBar>
+            <br/>
+            <br/>
+            <br/>
+            
+            <div>
+            <nav style="font-weight:normal">
+                <b:navbarLinks>
+                    <b:navCommandLink value="Principal" action="#{loginBean.volver()}"></b:navCommandLink>
+                    <b:navCommandLink value="Mis Articulos" action="#{articuloBean.irPublicados()}"></b:navCommandLink>
+                    <b:navCommandLink value="Publicaciones" action="#{articuloBean.irPublicaciones()}"></b:navCommandLink>
+                    <b:navCommandLink value="Revisiones" action="#{articuloBean.irRevisiones()}" rendered="#{loginBean.usuarioP.idRango.idRango == 3}"></b:navCommandLink>
+                    <b:navCommandLink value="Gestión" action="#{loginBean.accesoGestionUsu()}" rendered="#{loginBean.usuarioP.idRango.idRango == 4}"></b:navCommandLink>
+                    <b:navCommandLink value="Correo" action="#{correoBean.irRecibidos()}" style="font-weight:720"></b:navCommandLink>
+                </b:navbarLinks>
+            </nav>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            
+            <legend style="font-weight:bold">Mensajes Recibidos</legend>
+            
+            <div>
+                <h:commandLink value="Mensajes Enviados" action="#{correoBean.irEnviados()}" style="font-style:italic"></h:commandLink>
+            </div>
+            <br/>
+            <div>
+                <h:commandButton value="Nuevo Mensaje" action="#{correoBean.nuevoMensaje()}" type="submit" class="btn btn-primary btn-sm"></h:commandButton>
+            </div>
+            <br/>
+        </h:form>
+            
+        <h:form id="formC">
+            <b:dataTable var="mensaje" value="#{correoBean.cargarMensajes()}" border="1" select="false" searching="false">
+            
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Asunto</f:facet>
+                    #{mensaje.titulo}
+                </b:dataTableColumn>
+            
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">
+                        <h:outputText value="De" rendered="#{correoBean.envio == false}"/>
+                        <h:outputText value="Para" rendered="#{correoBean.envio == true}"/>
+                    </f:facet>
+                
+                    <h:outputText value="#{mensaje.idEmisor.alias}" rendered="#{correoBean.envio == false}"/>
+                    <h:outputText value="#{correoBean.buscarNombre(mensaje.idReceptor)}" rendered="#{correoBean.envio == true}"/>
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Estado</f:facet>
+                
+                    <h:outputText value="Nuevo" rendered="#{mensaje.leido == 0}"/>
+                    <h:outputText value="Leido" rendered="#{mensaje.leido == 1}"/>
+                </b:dataTableColumn>
+            
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Leer</f:facet>
+                    <h:commandButton action="#{correoBean.leerMail()}" value="Leer" type="submit" class="btn btn-primary btn-sm">
+                        <f:setPropertyActionListener target="#{correoBean.mailID}" value="#{mensaje.id}"/>
+                    </h:commandButton>
+                </b:dataTableColumn> 
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Eliminar</f:facet>
+                    <h:commandButton action="#{correoBean.eliminar()}" value="Eliminar" type="submit" class="btn btn-danger btn-sm">
+                        <f:setPropertyActionListener target="#{correoBean.mailID}" value="#{mensaje.id}"/>
+                        <f:ajax execute="@form" render="formC"/>
+                    </h:commandButton>
+                </b:dataTableColumn>  
+            </b:dataTable>
+    
+        </h:form>
+        </h:panelGrid>
+        
+        <h:panelGrid rendered="#{correoBean.envio == true}">
+            
+        <h:form>
+            <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+            </b:navBar>
+            <br/>
+            <br/>
+            <br/>
+            
+            <div>
+            <nav style="font-weight:normal">
+                <b:navbarLinks>
+                    <b:navCommandLink value="Principal" action="#{loginBean.volver()}"></b:navCommandLink>
+                    <b:navCommandLink value="Mis Articulos" action="#{articuloBean.irPublicados()}"></b:navCommandLink>
+                    <b:navCommandLink value="Publicaciones" action="#{articuloBean.irPublicaciones()}"></b:navCommandLink>
+                    <b:navCommandLink value="Revisiones" action="#{articuloBean.irRevisiones()}" rendered="#{loginBean.usuarioP.idRango.idRango == 3}"></b:navCommandLink>
+                    <b:navCommandLink value="Gestión" action="#{loginBean.accesoGestionUsu()}" rendered="#{loginBean.usuarioP.idRango.idRango == 4}"></b:navCommandLink>
+                    <b:navCommandLink value="Correo" action="#{correoBean.irRecibidos()}" style="font-weight:720"></b:navCommandLink>
+                </b:navbarLinks>
+            </nav>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            
+            <legend style="font-weight:bold">Mensajes Enviados</legend>
+            
+            <div>
+                <h:commandLink value="Mensajes Recibidos" action="#{correoBean.irRecibidos()}" style="font-style:italic"></h:commandLink>
+            </div>
+            <br/>
+            <div>
+                <h:commandButton value="Nuevo Mensaje" action="#{correoBean.nuevoMensaje()}" type="submit" class="btn btn-primary btn-sm"></h:commandButton>
+            </div>
+            <br/>
+        </h:form>
+        
+        <h:form id="formD">
+            <b:dataTable var="mensaje" value="#{correoBean.cargarMensajes()}" border="1" select="false" searching="false">
+            
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Asunto</f:facet>
+                    #{mensaje.titulo}
+                </b:dataTableColumn>
+            
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">
+                        <h:outputText value="De" rendered="#{correoBean.envio == false}"/>
+                        <h:outputText value="Para" rendered="#{correoBean.envio == true}"/>
+                    </f:facet>
+                
+                    <h:outputText value="#{mensaje.idEmisor.alias}" rendered="#{correoBean.envio == false}"/>
+                    <h:outputText value="#{correoBean.buscarNombre(mensaje.idReceptor)}" rendered="#{correoBean.envio == true}"/>
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Estado</f:facet>
+                
+                    <h:outputText value="Nuevo" rendered="#{mensaje.leido == 0}"/>
+                    <h:outputText value="Leido" rendered="#{mensaje.leido == 1}"/>
+                </b:dataTableColumn>
+            
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Leer</f:facet>
+                    <h:commandButton action="#{correoBean.leerMail()}" value="Leer" type="submit" class="btn btn-primary btn-sm">
+                        <f:setPropertyActionListener target="#{correoBean.mailID}" value="#{mensaje.id}"/>
+                    </h:commandButton>
+                </b:dataTableColumn>   
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Eliminar</f:facet>
+                    <h:commandButton action="#{correoBean.eliminar()}" value="Eliminar" type="submit" class="btn btn-danger btn-sm">
+                        <f:setPropertyActionListener target="#{correoBean.mailID}" value="#{mensaje.id}"/>
+                        <f:ajax execute="@form" render="formD"/>
+                    </h:commandButton>
+                </b:dataTableColumn>  
+            </b:dataTable>
+            
+            
+        </h:form>
+        </h:panelGrid>
+    </h:body>
+</html>

@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Publicaciones</title>
+
+    </h:head>
+    <h:body style="padding-left: 50px; padding-right: 20px; padding-bottom: 20px">
+            
+        <h:form>
+        <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+        </b:navBar>
+        <br/>
+        <br/>
+        <br/>
+            
+        <div>
+        <nav style="font-weight:normal">
+            <b:navbarLinks>
+                <b:navCommandLink value="Principal" action="#{loginBean.volver()}"></b:navCommandLink>
+                <b:navCommandLink value="Mis Articulos" action="#{articuloBean.irPublicados()}"></b:navCommandLink>
+                <b:navCommandLink value="Publicaciones" action="#{articuloBean.irPublicaciones()}"  style="font-weight:720"></b:navCommandLink>
+                <b:navCommandLink value="Revisiones" action="#{articuloBean.irRevisiones()}" rendered="#{loginBean.usuarioP.idRango.idRango == 3}"></b:navCommandLink>
+                <b:navCommandLink value="Gestión" action="#{loginBean.accesoGestionUsu()}" rendered="#{loginBean.usuarioP.idRango.idRango == 4}"></b:navCommandLink>
+                <b:navCommandLink value="Correo" action="#{correoBean.irRecibidos()}"></b:navCommandLink>
+            </b:navbarLinks>
+        </nav>
+        </div>
+        <br/> 
+        <br/> 
+        <br/>
+            
+         <legend style="font-weight:bold">Artículos Publicados</legend>
+            
+            <div>
+                <label>Título</label>
+                <h:inputText value="#{articuloBean.busqueda}"></h:inputText>
+            </div>
+            <br/>
+            
+            <div>
+                <h:outputLabel value="Seleccione Campo de Estudio y Área de Conocimiento"></h:outputLabel>
+            <table>
+                <tr>
+                    <td><h:outputLabel value="Campo de Estudio: "></h:outputLabel></td> 
+                    <td>
+                        <h:selectOneMenu value="#{articuloBean.campoSel}">
+                            <f:selectItem itemLabel="" itemValue="0"/>
+                            <f:selectItems value="#{articuloBean.campoList}" var="campo"
+                                           itemLabel="#{campo.nombre}" itemValue="#{campo.id}">
+                            </f:selectItems>                   
+                        </h:selectOneMenu>
+                    </td>
+                    <td>
+                        <h:commandButton action="#{articuloBean.seleccionaCampo()}" value="Seleccionar" type="submit" class="btn btn-secondary btn-sm"></h:commandButton>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td><h:outputLabel value="Área de Conocimiento: " rendered="#{articuloBean.campoSel!=0}"></h:outputLabel></td> 
+                    <td>
+                        <h:selectOneMenu value="#{articuloBean.areaSel}" rendered="#{articuloBean.campoSel!=0}">
+                            <f:selectItem itemLabel="" itemValue="0"/>
+                            <f:selectItems value="#{articuloBean.areaList}" var="area"
+                                           itemLabel="#{area.nombre}" itemValue="#{area.id}">
+                            </f:selectItems>
+                        </h:selectOneMenu>
+                    </td>
+                </tr> 
+            </table> 
+            </div>
+
+            
+            <div>
+                <h:commandButton value="Buscar" action="#{articuloBean.realizarBusqueda()}" type="submit" class="btn btn-primary btn-sm">
+                    <f:ajax execute="@form" render="formF"/>
+                </h:commandButton>
+            </div>
+            
+            <br/>
+            
+        </h:form>
+            
+        <h:form id="formF">    
+            
+            <b:alert rendered="#{articuloBean.berror == true}">
+                    <h:outputText value="*No existe ningun articulo con ese Título" rendered="#{articuloBean.berror == true}"/>
+            </b:alert>
+            
+            <br/>
+            
+            <b:dataTable var="articulo" value="#{articuloBean.publicadosArt}" border="1" select="false" searching="false">
+                
+                <b:dataTableColumn>
+                    <f:facet name="header">Titulo del Artículo</f:facet>
+                    #{articulo.titulo}
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Autor</f:facet>
+                    #{articulo.redactor.alias}
+                </b:dataTableColumn>
+            
+                <b:dataTableColumn>
+                    <f:facet name="header">Ultima Actualización</f:facet>
+                    <h:outputText value="#{articulo.fecha}">
+                        <f:convertDateTime pattern="yyyy MM dd"/>
+                    </h:outputText>
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Campo de Estudio</f:facet>
+                    #{articuloBean.cargarEstudioArt(articulo)}
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Área de Conocimiento</f:facet>
+                    #{articuloBean.cargarConocimientoArt(articulo)}
+                </b:dataTableColumn>
+
+                <b:dataTableColumn>
+                    <f:facet name="header">Valoracion Media</f:facet>
+                    #{articuloBean.cargarMedia(articulo)}
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn>
+                    <f:facet name="header">Votos Totales</f:facet>
+                    #{articuloBean.cargarNumVotos(articulo)}
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Leer</f:facet>
+                    <h:commandButton action="#{articuloBean.leerArticuloB()}" value="Leer" type="submit" class="btn btn-primary btn-sm">
+                        <f:setPropertyActionListener target="#{articuloBean.articuloID}" value="#{articulo.idArticulo}"/>
+                    </h:commandButton>
+                </b:dataTableColumn>
+                
+            </b:dataTable>
+        </h:form>
+    </h:body>
+</html>

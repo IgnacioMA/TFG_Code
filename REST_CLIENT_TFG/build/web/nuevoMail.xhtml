@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    
+    <h:head>
+        <title>Gestión de Correo</title>
+    </h:head>
+    <h:body style="padding-left: 50px; padding-right: 20px; padding-bottom: 20px">
+        <h:panelGrid rendered="#{correoBean.lectura == false}">
+        <h:form>
+        <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+        </b:navBar>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+            
+        <legend style="font-weight:bold">Nuevo Correo</legend>
+            
+            <div>
+                <h:outputText value="Alias Destinatario" style="font-weight:bold"/>
+                <div>
+                    <h:inputText value="#{correoBean.aliasM}" rendered="#{correoBean.lectura == false}"></h:inputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>Asunto</label>
+                <div>
+                    <h:inputText value="#{correoBean.tituloM}"></h:inputText>
+                </div>
+            </div>
+            <br/>
+            <div>
+                <label>Mensaje</label>
+                <div>
+                    <h:inputTextarea value="#{correoBean.textoM}" rows="8" cols="60"/>
+                </div>
+            </div>
+            <br/>
+            
+            <b:alert rendered="#{correoBean.aerror == true}">
+                    <h:outputText value="*Alias no valido" rendered="#{correoBean.aerror == true}"/>
+                </b:alert>
+            <br/>
+            
+            <div>
+                <h:commandButton value="Volver" action="#{correoBean.volver()}" type="submit" class="btn btn-secondary"></h:commandButton>
+                <h:commandButton value="Enviar" action="#{correoBean.enviar()}" type="submit" class="btn btn-primary"></h:commandButton>
+            </div>
+            
+        </h:form>
+        </h:panelGrid>
+        
+        
+        
+        
+        
+        
+        
+        <h:panelGrid rendered="#{correoBean.lectura == true}">
+        <h:form>
+        <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+        </b:navBar>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+            
+        <legend style="font-weight:bold">Leer Correo</legend>
+     
+            <div>
+                <h:outputText value="Alias Destinatario" rendered="#{correoBean.condicionA() == false}" style="font-weight:bold"/>
+                <h:outputText value="Alias Emisor" rendered="#{correoBean.condicionA() == true}" style="font-weight:bold"/>
+                <div>
+                    <h:outputText value="#{correoBean.mail.idEmisor.alias}" rendered="#{correoBean.condicionA() == true}"></h:outputText>
+                    <h:outputText value="#{correoBean.nombRecep}" rendered="#{correoBean.condicionA() == false}"></h:outputText>
+                </div>
+            </div>
+            
+            <div>
+                <label>Asunto</label>
+                <div>
+                    <h:outputText value="#{correoBean.mail.titulo}"></h:outputText>
+                </div>
+            </div>
+            <br/>
+            <div>
+                <label>Mensaje</label>
+                <div>
+                    <h:inputTextarea value="#{correoBean.mail.contenido}" disabled="true" rows="8" cols="60"/>
+                </div>
+            </div>
+            <br/>
+            
+            <div>
+                <h:commandButton value="Volver" action="#{correoBean.volver()}" type="submit" class="btn btn-secondary"></h:commandButton>
+            </div>
+            
+        </h:form>
+        </h:panelGrid>
+    </h:body>
+</html>

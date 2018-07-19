@@ -1,0 +1,195 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    
+    <h:head>
+        <title>Mis Articulos</title>
+    </h:head>
+    <h:body style="padding-left: 50px; padding-right: 20px; padding-bottom: 20px">
+        
+        <h:panelGrid rendered="#{articuloBean.guardado == false}">
+        
+        <h:form>
+        <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+        </b:navBar>
+        <br/>
+        <br/>
+        <br/>
+            
+        <div>
+        <nav style="font-weight:normal">
+            <b:navbarLinks>
+                <b:navCommandLink value="Principal" action="#{loginBean.volver()}"></b:navCommandLink>
+                <b:navCommandLink value="Mis Articulos" action="#{articuloBean.irPublicados()}" style="font-weight:720"></b:navCommandLink>
+                <b:navCommandLink value="Publicaciones" action="#{articuloBean.irPublicaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Revisiones" action="#{articuloBean.irRevisiones()}" rendered="#{loginBean.usuarioP.idRango.idRango == 3}"></b:navCommandLink>
+                <b:navCommandLink value="Gestión" action="#{loginBean.accesoGestionUsu()}" rendered="#{loginBean.usuarioP.idRango.idRango == 4}"></b:navCommandLink>
+                <b:navCommandLink value="Correo" action="#{correoBean.irRecibidos()}"></b:navCommandLink>
+            </b:navbarLinks>
+        </nav>
+        </div>
+        <br/> 
+        <br/> 
+        <br/>
+        
+        <legend style="font-weight:bold">Mis Artículos Publicados</legend>
+            
+            <div>
+                <h:commandLink value="Ir a Mis Artículos Guardados" action="#{articuloBean.irGuardados()}" style="font-style:italic"></h:commandLink>
+            </div>
+            <br/>
+            
+            <div>
+                <h:commandButton value="Redactar Nuevo Artículo" action="#{articuloBean.nuevoArticulo()}" type="submit" class="btn btn-primary btn-sm" rendered="#{articuloBean.accesoNuevoartic()}"></h:commandButton>
+            </div>
+            <br/>
+        </h:form>
+            
+        <h:form id="formA">
+            <b:dataTable var="artic" value="#{articuloBean.cargarArticulos()}" border="1" select="false" searching="false">
+            
+                <b:dataTableColumn>
+                    <f:facet name="header">Titulo del Artículo</f:facet>
+                    #{artic.titulo}
+                </b:dataTableColumn>
+            
+                <b:dataTableColumn>
+                    <f:facet name="header">Ultima Actualización</f:facet>
+                    <h:outputText value="#{artic.fecha}">
+                    <f:convertDateTime pattern="yyyy MM dd"/></h:outputText>
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn  orderable="false">
+                    <f:facet name="header">Campo de Estudio</f:facet>
+                    #{articuloBean.cargarEstudioArt(artic)}
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn  orderable="false">
+                    <f:facet name="header">Área de Conocimiento</f:facet>
+                    #{articuloBean.cargarConocimientoArt(artic)}
+                </b:dataTableColumn>
+                
+                <b:dataTableColumn  orderable="false">
+                    <f:facet name="header">Leer</f:facet>
+                    <h:commandButton action="#{articuloBean.leerArticuloA()}" value="Leer" type="submit" class="btn btn-primary btn-sm">
+                        <f:setPropertyActionListener target="#{articuloBean.articuloID}" value="#{artic.idArticulo}"/>
+                    </h:commandButton>
+                </b:dataTableColumn> 
+                
+                <b:dataTableColumn  orderable="false">
+                    <f:facet name="header">Eliminar</f:facet>
+                    <h:commandButton action="#{articuloBean.eliminar()}" value="Eliminar" type="submit" class="btn btn-danger btn-sm">
+                        <f:setPropertyActionListener target="#{articuloBean.articuloID}" value="#{artic.idArticulo}"/>
+                        <f:ajax execute="@form" render="formA"/>
+                    </h:commandButton>
+                </b:dataTableColumn> 
+                
+            </b:dataTable>
+        </h:form>
+        </h:panelGrid>
+        
+        
+        
+        <h:panelGrid rendered="#{articuloBean.guardado == true}">
+        
+        <h:form>
+        <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+        </b:navBar>
+        <br/>
+        <br/>
+        <br/>
+            
+        <div>
+        <nav style="font-weight:normal">
+            <b:navbarLinks>
+                <b:navCommandLink value="Principal" action="#{loginBean.volver()}"></b:navCommandLink>
+                <b:navCommandLink value="Mis Articulos" action="#{articuloBean.irPublicados()}" style="font-weight:720"></b:navCommandLink>
+                <b:navCommandLink value="Publicaciones" action="#{articuloBean.irPublicaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Revisiones" action="#{articuloBean.irRevisiones()}" rendered="#{loginBean.usuarioP.idRango.idRango == 3}"></b:navCommandLink>
+                <b:navCommandLink value="Gestión" action="#{loginBean.accesoGestionUsu()}" rendered="#{loginBean.usuarioP.idRango.idRango == 4}"></b:navCommandLink>
+                <b:navCommandLink value="Correo" action="#{correoBean.irRecibidos()}"></b:navCommandLink>
+            </b:navbarLinks>
+        </nav>
+        </div>
+        <br/> 
+        <br/> 
+        <br/>
+        
+        <legend style="font-weight:bold">Mis Artículos Guardados</legend>
+            
+            <div>
+                <h:commandLink value="Ir a Mis Artículos Publicados" action="#{articuloBean.irPublicados()}" style="font-style:italic"></h:commandLink>
+            </div>
+            <br/>
+            
+            <div>
+                <h:commandButton value="Redactar Nuevo Artículo" action="#{articuloBean.nuevoArticulo()}" type="submit" class="btn btn-primary btn-sm" rendered="#{articuloBean.accesoNuevoartic()}"></h:commandButton>
+            </div>
+            <br/>
+        </h:form>
+            
+        <h:form id="formB">
+            <b:dataTable var="artic" value="#{articuloBean.cargarArticulos()}" border="1" select="false" searching="false">
+            
+                <b:dataTableColumn>
+                    <f:facet name="header">Titulo del Artículo</f:facet>
+                    #{artic.titulo}
+                </b:dataTableColumn> 
+            
+                <b:dataTableColumn>
+                    <f:facet name="header">Ultima Actualización</f:facet>
+                    <h:outputText value="#{artic.fecha}">
+                    <f:convertDateTime pattern="yyyy MM dd"/></h:outputText>
+                </b:dataTableColumn> 
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Campo de Estudio</f:facet>
+                    #{articuloBean.cargarEstudioArt(artic)}
+                </b:dataTableColumn> 
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Área de Conocimiento</f:facet>
+                    #{articuloBean.cargarConocimientoArt(artic)}
+                </b:dataTableColumn> 
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Leer</f:facet>
+                    <h:commandButton action="#{articuloBean.leerArticuloA()}" value="Leer" type="submit" class="btn btn-primary btn-sm">
+                        <f:setPropertyActionListener target="#{articuloBean.articuloID}" value="#{artic.idArticulo}"/>
+                    </h:commandButton>
+                </b:dataTableColumn> 
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Editar</f:facet>
+                    <h:commandButton action="#{articuloBean.editarArticulo()}" value="Editar" rendered="#{articuloBean.condicion(artic) == true}" type="submit" class="btn btn-secondary btn-sm">
+                        <f:setPropertyActionListener target="#{articuloBean.articuloID}" value="#{artic.idArticulo}"/>
+                    </h:commandButton>
+                </b:dataTableColumn>   
+                
+                <b:dataTableColumn orderable="false">
+                    <f:facet name="header">Eliminar</f:facet>
+                    <h:commandButton action="#{articuloBean.eliminar()}" value="Eliminar" type="submit" class="btn btn-danger btn-sm">
+                        <f:setPropertyActionListener target="#{articuloBean.articuloID}" value="#{artic.idArticulo}"/>
+                        <f:ajax execute="@form" render="formB"/>
+                    </h:commandButton>
+                </b:dataTableColumn> 
+                
+            </b:dataTable>
+        </h:form>
+        </h:panelGrid>
+        
+    </h:body>
+</html>

@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+    <h:head>
+        <title>Darse de Alta en la Web</title>
+        
+    </h:head>
+    
+    <h:body style="padding-left: 400px;padding-right: 400px; padding-bottom: 20px">
+        <h:form>
+            
+        <br/>
+        <br/>
+        <br/>
+            
+        <div>
+            
+        <b:jumbotron>
+            
+            <fieldset align="center">
+            
+            <legend style="font-weight:bold">Nuevo Usuario</legend>
+            
+            <div>
+                <label>Alias</label>
+                <div>
+                    <h:inputText value="#{loginBean.alias}"/>
+                </div>  
+            </div>
+            <br/>
+            
+            <div>
+                <label>Email</label>
+                <div>
+                    <h:inputText value="#{loginBean.email}"/>
+                </div>
+            </div>
+            <br/>
+            
+            <div>
+                <label>Contraseña</label>
+                <div>
+                    <h:inputSecret value="#{loginBean.pass}"/>
+                </div>
+            </div>
+            <br/>
+            
+            <div>
+                <label>Confirmar Contraseña</label>
+                <div>
+                    <h:inputSecret value="#{loginBean.passConfirm}"/>
+                </div>
+            </div>
+        
+        </fieldset>  
+        </b:jumbotron>
+            
+            <br/>
+        
+            <div align="center">
+                <b:alert rendered="#{loginBean.al == true}">
+                <h:outputText value="*Alias en Uso" rendered="#{loginBean.al == true}"/></b:alert>
+                <b:alert rendered="#{loginBean.ml == true}">
+                <h:outputText value="*Email en Uso" rendered="#{loginBean.ml == true}"/></b:alert>
+                <b:alert rendered="#{loginBean.passl == true}">
+                <h:outputText value="*Las Contraseñas no coinciden" rendered="#{loginBean.passl == true}"/></b:alert>
+                <b:alert rendered="#{loginBean.vacios == true}">
+                <h:outputText value="*Los campos no pueden estar vacios" rendered="#{loginBean.vacios == true}"/></b:alert>
+            </div>    
+
+            <div align="center">
+                <h:commandButton value="Registrarse" action="#{loginBean.nuevaAlta()}" type="submit" class="btn btn-primary"></h:commandButton>
+                <h:commandButton value="Volver" action="#{loginBean.volverLog()}" type="submit" class="btn btn-secondary"></h:commandButton>
+            </div>
+        </div>    
+        </h:form>
+    </h:body>
+</html>

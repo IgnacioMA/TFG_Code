@@ -1,0 +1,144 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    
+    <h:head>
+        <title>Lectura de Artículos</title>
+        <script src="ckeditor/ckeditor.js"/>
+    </h:head>
+    <h:body style="padding-left: 50px; padding-right: 650px; padding-bottom: 20px">
+        <h:form>
+            <b:navBar brand="Pataforma T.A.E." fluid="true" style="font-weight:bold" fixed="top" sticky="true">
+            <b:navbarLinks>
+                <b:navCommandLink value="Mi Perfil" action="#{loginBean.cargarPerfil()}"></b:navCommandLink>
+                <b:navCommandLink value="Notificaciones" action="#{loginBean.irNotificaciones()}"></b:navCommandLink>
+                <b:navCommandLink value="Log Out" action="#{loginBean.salir()}"></b:navCommandLink>
+            </b:navbarLinks>
+            </b:navBar>
+            <br/>
+            <br/>
+            <br/>
+            
+            <div>
+            <nav style="font-weight:normal">
+                <b:navbarLinks>
+                    <b:navCommandLink value="Principal" action="#{loginBean.volver()}"></b:navCommandLink>
+                    <b:navCommandLink value="Mis Articulos" action="#{articuloBean.irPublicados()}"></b:navCommandLink>
+                    <b:navCommandLink value="Publicaciones" action="#{articuloBean.irPublicaciones()}"></b:navCommandLink>
+                    <b:navCommandLink value="Revisiones" action="#{articuloBean.irRevisiones()}" rendered="#{loginBean.usuarioP.idRango.idRango == 3}"></b:navCommandLink>
+                    <b:navCommandLink value="Gestión" action="#{loginBean.accesoGestionUsu()}" rendered="#{loginBean.usuarioP.idRango.idRango == 4}"></b:navCommandLink>
+                    <b:navCommandLink value="Correo" action="#{correoBean.irRecibidos()}"></b:navCommandLink>
+                </b:navbarLinks>
+            </nav>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            
+            <legend style="font-weight:bold">Leer Articulo</legend>
+     
+        <div>
+            <label>Autor</label>
+                <div>
+                    <h:outputText value="#{articuloBean.articulo.redactor.alias}"></h:outputText>
+                </div>
+        </div>
+            
+        <div>
+            <label>Titulo</label>
+                <div>
+                    <h:outputText value="#{articuloBean.articulo.titulo}"></h:outputText>
+                </div>
+        </div>
+        <br/>
+        
+        
+        
+        
+        
+        
+        <div>
+            <label>Texto</label>
+                <div>
+                    <textarea id="editor1" name="editor1" rows="10" cols="50" disabled="true">
+                        <h:outputText value="#{articuloBean.articulo.texto}"/>                    
+                    </textarea>
+                    <script>
+                        CKEDITOR.replace( 'editor1' );
+                    </script>
+                </div>
+        </div>    
+        <br/>
+        
+        
+        
+        
+        
+        
+        
+        <div>
+            <h:outputLabel value="Puntuar " rendered="#{valoracionBean.condicionPuntua()==true}"></h:outputLabel> 
+                    
+                <h:selectOneMenu value="#{valoracionBean.valor}" 
+                                     rendered="#{valoracionBean.condicionPuntua()==true}">
+                    <f:selectItem itemLabel=""  itemValue="0"/>
+                    <f:selectItem itemLabel="1" itemValue="1"/>
+                    <f:selectItem itemLabel="2" itemValue="2"/>
+                    <f:selectItem itemLabel="3" itemValue="3"/>
+                    <f:selectItem itemLabel="4" itemValue="4"/>
+                    <f:selectItem itemLabel="5" itemValue="5"/>                  
+                </h:selectOneMenu>
+                    
+                <h:commandButton action="#{valoracionBean.puntuar()}" 
+                             value="Seleccionar" rendered="#{valoracionBean.condicionPuntua()==true}" type="submit" class="btn btn-primary btn-sm"></h:commandButton>
+        </div>  
+        <br/>
+        
+        <h:panelGrid rendered="#{articuloBean.guardado == false}">
+        <div>
+            <label>Comentario:</label>
+                <div> 
+                   <h:inputTextarea value="#{valoracionBean.comentarioTxt}" rows="3" cols="40"></h:inputTextarea>    
+                   <h:commandButton action="#{valoracionBean.nuevoComent()}" 
+                                         value="Comentar" type="submit" class="btn btn-primary btn-sm">
+                        <f:ajax execute="@form" render="formG"/>
+                   </h:commandButton>
+                </div>           
+        </div>
+        </h:panelGrid>
+        <br/>
+        </h:form>
+            
+        <h:form id="formG"> 
+        <div>    
+            <c:forEach items="#{valoracionBean.cargarComentarios()}" var="comenta">
+                <div>
+                    <h:outputText value="#{comenta.idUsuario.alias} / " style="font-weight:bold;color:#000000"/>
+                        <h:outputText value="#{comenta.fecha}" style="color:#395e60">   
+                            <f:convertDateTime pattern="dd MM yyyy"/>
+                        </h:outputText> 
+                </div>
+                <div>
+                    <h:inputTextarea value="#{comenta.texto}" disabled="true" rows="3" cols="50"/>
+                    <h:commandLink action="#{valoracionBean.eliminarComent()}" 
+                                   value="Eliminar" rendered="#{valoracionBean.condicionElimComent(comenta)}" style="color:#000000">
+                        <f:setPropertyActionListener target="#{valoracionBean.comentarioID}" value="#{comenta.id}"/>
+                        <f:ajax execute="@form" render="formG"/>                        
+                    </h:commandLink>
+                    
+                </div>
+            </c:forEach>
+        </div>
+        <br/>
+        
+        <div>
+            <h:commandButton value="Volver" action="#{articuloBean.volver()}" type="submit" class="btn btn-secondary"></h:commandButton>
+        </div>
+            
+        </h:form>
+    </h:body>
+</html>
